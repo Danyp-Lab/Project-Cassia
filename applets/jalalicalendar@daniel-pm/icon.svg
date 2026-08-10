@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <!-- Subtle shadow for modern depth -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Main Calendar Body -->
+  <rect x="14" y="24" width="100" height="92" rx="12" fill="#ffffff" filter="url(#shadow)"/>
+  
+  <!-- Modern Flat Header (Mint/Cinnamon Blue accent) -->
+  <path d="M14 36 Q14 24 26 24 L102 24 Q114 24 114 36 L114 54 L14 54 Z" fill="#3daee9"/>
+  
+  <!-- Binder Rings -->
+  <rect x="30" y="12" width="8" height="24" rx="4" fill="#bdc3c7"/>
+  <circle cx="34" cy="30" r="2" fill="#2c3e50" opacity="0.5"/>
+  
+  <rect x="90" y="12" width="8" height="24" rx="4" fill="#bdc3c7"/>
+  <circle cx="94" cy="30" r="2" fill="#2c3e50" opacity="0.5"/>
+
+  <!-- Month Text (Aban) -->
+  <text x="64" y="44" font-family="sans-serif" font-weight="bold" font-size="18" fill="#ffffff" text-anchor="middle">آبان</text>
+
+  <!-- Day Text (29) -->
+  <text x="64" y="98" font-family="sans-serif" font-weight="bold" font-size="46" fill="#2c3e50" text-anchor="middle">۲۹</text>
+
+  <!-- Minimalist Grid Lines -->
+  <line x1="24" y1="106" x2="104" y2="106" stroke="#ecf0f1" stroke-width="2"/>
+  <line x1="24" y1="64" x2="104" y2="64" stroke="#ecf0f1" stroke-width="2"/>
+</svg>
