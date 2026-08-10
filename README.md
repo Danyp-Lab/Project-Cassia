@@ -1,2 +1,73 @@
-# Project-Cassia
-A customized UI framework and JavaScript applet collection for the Cinnamon desktop
+# Project Cassia 🍃
+
+![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
+![Platform](https://img.shields.io/badge/Platform-Cinnamon-orange.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
+
+**Project Cassia** is an advanced suite of high-performance JavaScript applets, UI components, and productivity widgets engineered for the Cinnamon Desktop Environment. 
+
+Designed with modern aesthetics and structural stability, this framework provides robust, memory-safe alternatives to standard desktop widgets. 
+
+## 📦 Included Components
+
+### 1. Modern Hijri Shamsi Calendar (`jalalicalendar@daniel-pm`)
+A highly optimized, multi-calendar applet that seamlessly integrates with the Cinnamon desktop.
+
+**Key Features:**
+*   **Multi-Calendar Engine:** Synchronized support for Gregorian, Jalali (Shamsi), and Hijri (Lunar) dates using precise epoch conversion algorithms.
+*   **Modern UI/UX:** Features a glassmorphism design language with seasonal theme borders (Spring, Summer, Autumn, Winter) and an annual progress bar.
+*   **Robust Event Handling:** Fully integrated with `gnome-calendar` and Evolution Data Server (EDS). Engineered with strict Clutter layout allocation handling, ensuring zero black-screen panics or window manager crashes during rapid UI rendering.
+*   **Advanced Rendering:** Custom logic for parsing spanning events, color-coded categories, and zero-width fallback rendering.
+
+## 📂 Repository Structure
+
+```text
+project-cassia/
+├── applets/
+│   └── jalalicalendar@daniel-pm/   # Modern Hijri Shamsi Calendar
+│       ├── applet.js               # Main loop and UI hooks
+│       ├── calendar.js             # Core Clutter UI and layout allocation
+│       ├── eventView.js            # EDS data parsing and event rows
+│       ├── metadata.json           # Applet registry
+│       ├── stylesheet.css          # Glassmorphic and seasonal styling
+│       └── modules/
+│           └── date-utils.js       # Epoch conversion algorithms
+├── themes/                         # (Planned) Cinnamon shell themes
+├── desklets/                       # (Planned) Desktop widgets
+├── extensions/                     # (Planned) Window manager enhancements
+├── assets/                         # Repository images and social previews
+└── README.md                       # Repository documentation
+```
+
+## 🚀 Installation
+
+To install the components, you can manually link them to your Cinnamon local share directory.
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/DanialPahlavan/Project-Cassia.git
+   cd Project-Cassia
+   ```
+
+2. **Install the Applet:**
+   Copy the applet folder to your local Cinnamon applets directory:
+   ```bash
+   cp -r applets/jalalicalendar@daniel-pm ~/.local/share/cinnamon/applets/
+   ```
+   *Alternatively, for local development and testing:*
+   ```bash
+   ln -s $(pwd)/applets/jalalicalendar@daniel-pm ~/.local/share/cinnamon/applets/
+   ```
+
+3. **Enable the Applet:**
+   * Right-click your panel and select **Applets**.
+   * Navigate to the **Manage** tab, find "Modern Hijri Shamsi Calendar", and click the `+` to add it to your panel.
+
+## 👨‍💻 Maintainer
+
+**Danial Pahlavan Masouri**  
+*PhD Candidate in Computer Science - Artificial Intelligence*
+
+## 📄 License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE) - see the LICENSE file for details.
