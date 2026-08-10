@@ -1,0 +1,27 @@
+/* ===================================================================
+ * 1. Base & Typography
+ * =================================================================== */
+stage {
+    font-family: 'Inter', 'Roboto', 'Ubuntu', sans-serif;
+    font-size: 10pt;
+    color: $fg_color;
+}
+
+/* Typography specifics */
+.calendar-today-date-label,
+.message-dialog-content .message-dialog-title {
+    font-weight: 800;
+    font-size: 1.35em;
+}
+
+.workspace-switch-osd, .media-keys-osd,
+.calendar-events-date-label, .calendar-today-day-label {
+    font-weight: 700;
+    font-size: 1.15em;
+}
+
+.calendar-month-label, .dialog-list .dialog-list-title,
+.polkit-dialog-user-combo, .menu-selected-app-title {
+    font-weight: 700;
+    font-size: 1em;
+}

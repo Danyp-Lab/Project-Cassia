@@ -19,6 +19,9 @@ A highly optimized, multi-calendar applet that seamlessly integrates with the Ci
 *   **Robust Event Handling:** Fully integrated with `gnome-calendar` and Evolution Data Server (EDS). Engineered with strict Clutter layout allocation handling, ensuring zero black-screen panics or window manager crashes during rapid UI rendering.
 *   **Advanced Rendering:** Custom logic for parsing spanning events, color-coded categories, and zero-width fallback rendering.
 
+### 2. LiquidGlass Theme (`LiquidGlass`)
+A modern glassmorphism Cinnamon theme designed for high-end aesthetics, featuring panel transparency, custom popover styling, and smooth hover state animations.
+
 ## 📂 Repository Structure
 
 ```text
@@ -32,7 +35,8 @@ project-cassia/
 │       ├── stylesheet.css          # Glassmorphic and seasonal styling
 │       └── modules/
 │           └── date-utils.js       # Epoch conversion algorithms
-├── themes/                         # (Planned) Cinnamon shell themes
+├── themes/
+│   └── LiquidGlass/                # Cinnamon shell theme
 ├── desklets/                       # (Planned) Desktop widgets
 ├── extensions/                     # (Planned) Window manager enhancements
 ├── assets/                         # Repository images and social previews
@@ -59,9 +63,26 @@ To install the components, you can manually link them to your Cinnamon local sha
    ln -s $(pwd)/applets/jalalicalendar@daniel-pm ~/.local/share/cinnamon/applets/
    ```
 
-3. **Enable the Applet:**
+3. **Install the Theme:**
+   Copy the theme to your local themes directory:
+   ```bash
+   mkdir -p ~/.themes
+   cp -r themes/LiquidGlass ~/.themes/
+   ```
+   *Alternatively, for local development and testing:*
+   ```bash
+   mkdir -p ~/.themes
+   ln -s $(pwd)/themes/LiquidGlass ~/.themes/
+   ```
+
+4. **Enable the Components:**
+   **Applet:**
    * Right-click your panel and select **Applets**.
    * Navigate to the **Manage** tab, find "Modern Hijri Shamsi Calendar", and click the `+` to add it to your panel.
+   
+   **Theme:**
+   * Open **System Settings** -> **Themes**.
+   * Change the Desktop, Controls, or Borders theme to **LiquidGlass**.
 
 ## 👨‍💻 Maintainer
 

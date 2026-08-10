@@ -1,0 +1,649 @@
+/*
+ * LiquidGlass Theme for Cinnamon
+ * A modern, high-performance glassmorphism theme for 2026 Linux Mint (Cinnamon 6.x+)
+ * Designed with beautiful, transparent overlays and smooth interactions.
+ * Fully standard: No system tweaks required.
+ */
+/* Liquid Glass Apple Palette */
+/* macOS Blue */
+/* ===================================================================
+ * 1. Base & Typography
+ * =================================================================== */
+stage {
+  font-family: "Inter", "Roboto", "Ubuntu", sans-serif;
+  font-size: 10pt;
+  color: #ffffff;
+}
+
+/* Typography specifics */
+.calendar-today-date-label,
+.message-dialog-content .message-dialog-title {
+  font-weight: 800;
+  font-size: 1.35em;
+}
+
+.workspace-switch-osd, .media-keys-osd,
+.calendar-events-date-label, .calendar-today-day-label {
+  font-weight: 700;
+  font-size: 1.15em;
+}
+
+.calendar-month-label, .dialog-list .dialog-list-title,
+.polkit-dialog-user-combo, .menu-selected-app-title {
+  font-weight: 700;
+  font-size: 1em;
+}
+
+/* ===================================================================
+ * 2. Panel
+ * =================================================================== */
+#panel {
+  background-color: rgba(30, 30, 30, 0.45);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+#panelLeft, #panelCenter, #panelRight {
+  padding: 0px 6px;
+  spacing: 4px;
+}
+
+/* Floating panel variant (for specific setups) */
+.floating-panel #panel {
+  border-radius: 16px;
+  margin: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.applet-box, .window-button, .panel-button {
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0px 8px;
+  margin: 2px 2px;
+  border-radius: 8px; /* Slightly squarer for macOS style */
+  transition-duration: 200ms;
+}
+
+.applet-box:hover, .window-button:hover, .panel-button:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.applet-box:active, .window-button:active, .panel-button:active,
+.applet-box:checked, .window-button:checked, .panel-button:checked {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* Grouped Window List Applet (Cinnamon 6+ Standard Taskbar) */
+.grouped-window-list-item-box {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 2px 2px;
+  border-radius: 8px; /* Slightly squarer for macOS style */
+  transition-duration: 200ms;
+}
+
+.grouped-window-list-item-box:hover, .grouped-window-list-item-box:focus {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.grouped-window-list-item-box:active, .grouped-window-list-item-box:checked {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.grouped-window-list-item-label {
+  padding-left: 4px;
+}
+
+.window-list-preview {
+  background-color: rgba(20, 20, 20, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  padding: 8px;
+}
+
+/* Grouped Window List Thumbnail Menu (Preview for Multi-Windows) */
+.grouped-window-list-thumbnail-menu {
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  background-color: rgba(20, 20, 20, 0.85);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.grouped-window-list-thumbnail-menu .item-box {
+  border-radius: 8px;
+  background-color: transparent;
+  padding: 4px;
+  transition-duration: 150ms;
+}
+
+.grouped-window-list-thumbnail-menu .item-box:outlined,
+.grouped-window-list-thumbnail-menu .item-box:selected,
+.grouped-window-list-thumbnail-menu .item-box:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.grouped-window-list-thumbnail-menu .thumbnail {
+  width: 256px;
+  padding-top: 4px;
+}
+
+.grouped-window-list-thumbnail-menu .thumbnail-box {
+  padding: 2px;
+  spacing: 4px;
+}
+
+.grouped-window-list-thumbnail-menu .separator {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.grouped-window-list-thumbnail-menu .window-close {
+  background-image: url("assets/close.svg");
+  background-size: 20px;
+  height: 20px;
+  width: 20px;
+  -cinnamon-close-overlap: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition-duration: 150ms;
+}
+
+.grouped-window-list-thumbnail-menu .window-close:hover {
+  background-color: #FF3B30;
+  background-image: url("assets/close-hover.svg");
+}
+
+.grouped-window-list-thumbnail-menu .window-close:active {
+  background-color: #D70015;
+}
+
+/* ===================================================================
+ * 3. Menus & Popovers
+ * =================================================================== */
+.menu, .popup-menu, .popup-menu-boxpointer {
+  background-color: rgba(40, 40, 40, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 10px;
+  margin: 6px;
+}
+
+.popup-menu-item {
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition-duration: 200ms;
+  spacing: 8px;
+}
+
+.popup-menu-item:hover, .popup-menu-item:active {
+  background-color: rgba(0, 122, 255, 0.85);
+  color: #ffffff;
+}
+
+.popup-menu-item:insensitive {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.popup-separator-menu-item {
+  -gradient-height: 1px;
+  -gradient-start: transparent;
+  -gradient-end: transparent;
+  -margin-horizontal: 1em;
+  height: 1px;
+  margin: 6px 0;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Search Entry (Main Menu) */
+.menu-search-entry, #menu-search-entry, #appmenu-search-entry {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  color: #ffffff;
+  caret-color: #ffffff;
+  caret-size: 1px;
+  padding: 8px 14px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition-duration: 250ms;
+}
+
+.menu-search-entry:focus, .menu-search-entry:hover,
+#menu-search-entry:focus, #appmenu-search-entry:focus {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 122, 255, 0.85);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 0 12px rgba(0, 122, 255, 0.4);
+}
+
+/* Favorites Box */
+.menu-favorites-box {
+  padding: 10px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ===================================================================
+ * 4. Dialogs, OSDs & Tooltips
+ * =================================================================== */
+.osd-window, .workspace-osd, .info-osd, .media-keys-osd, .resize-popup {
+  background-color: rgba(35, 35, 35, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 18px;
+  text-align: center;
+}
+
+#Tooltip {
+  background-color: rgba(20, 20, 20, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  padding: 8px 12px;
+  font-size: 9pt;
+}
+
+.notification {
+  background-color: rgba(45, 45, 45, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  padding: 14px;
+  margin: 8px;
+}
+
+.dialog {
+  background-color: rgba(45, 45, 45, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  color: white;
+  padding: 24px;
+}
+
+.dialog .dialog-button, .notification-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 10px 20px;
+  color: #ffffff;
+  transition-duration: 200ms;
+  font-weight: bold;
+}
+
+.dialog .dialog-button:hover, .notification-button:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.dialog .dialog-button:active, .notification-button:active {
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Default and Destructive Action Buttons */
+.dialog .dialog-button:default {
+  background-color: rgba(0, 122, 255, 0.85);
+  border-color: #007AFF;
+}
+
+.dialog .dialog-button:hover:default {
+  background-color: rgba(10, 132, 255, 0.95);
+}
+
+.dialog .dialog-button:destructive-action {
+  background-color: rgba(255, 59, 48, 0.85);
+  border-color: #FF3B30;
+}
+
+.dialog .dialog-button:hover:destructive-action {
+  background-color: rgba(255, 69, 58, 0.95);
+}
+
+/* Run dialog specific input fields */
+.run-dialog-entry, .prompt-dialog-password-entry {
+  background-color: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  color: white;
+  padding: 8px 14px;
+  transition-duration: 200ms;
+}
+
+.run-dialog-entry:focus, .prompt-dialog-password-entry:focus {
+  border-color: #007AFF;
+  box-shadow: inset 0 0 0 1px rgba(0, 122, 255, 0.5), 0 0 8px rgba(0, 122, 255, 0.3);
+}
+
+/* ===================================================================
+ * 5. Window Switcher & Workspaces
+ * =================================================================== */
+.switcher-list {
+  background-color: rgba(35, 35, 35, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 20px;
+}
+
+.switcher-list .item-box {
+  padding: 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background-color: transparent;
+  transition-duration: 200ms;
+}
+
+.switcher-list .item-box:selected {
+  background-color: rgba(0, 122, 255, 0.85);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.workspace-thumbnails {
+  spacing: 32px;
+}
+
+.expo-workspace-thumbnail-frame {
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.expo-workspace-thumbnail-frame#active {
+  border: 2px solid #007AFF;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.expo-background {
+  background-color: rgba(20, 20, 20, 0.7); /* Glassy blur effect equivalent */
+}
+
+.window-close, .workspace-close-button {
+  background-image: url("assets/close.svg");
+  background-size: 20px;
+  height: 20px;
+  width: 20px;
+  -cinnamon-close-overlap: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition-duration: 150ms;
+}
+
+.window-close:hover, .workspace-close-button:hover {
+  background-color: #FF3B30;
+  background-image: url("assets/close-hover.svg");
+}
+
+.window-close:active, .workspace-close-button:active {
+  background-color: #D70015;
+}
+
+/* ===================================================================
+ * 6. Applets (Calendar, Sound, Power, Network, etc.)
+ * =================================================================== */
+/* Calendar */
+.calendar {
+  margin-top: 12px;
+  spacing-rows: 2px;
+  spacing-columns: 2px;
+}
+
+.calendar-today-home-button, .calendar-today-home-button-enabled {
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition-duration: 200ms;
+}
+
+.calendar-today-home-button:hover, .calendar-today-home-button-enabled:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.calendar-day-base {
+  text-align: center;
+  width: 2.6em;
+  height: 2.6em;
+  border-radius: 50%;
+  color: #ffffff;
+  transition-duration: 150ms;
+}
+
+.calendar-day-base:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.calendar-today {
+  background-color: rgba(0, 122, 255, 0.85);
+  border: 1px solid #007AFF;
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+.calendar-other-month-day {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.calendar-not-today:selected {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.calendar-events-main-box {
+  margin-right: 16px;
+  min-width: 320px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.calendar-event-button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition-duration: 200ms;
+}
+
+.calendar-event-button:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Sound Applet */
+.sound-button {
+  padding: 8px;
+  border-radius: 8px;
+  transition-duration: 200ms;
+}
+
+.sound-button:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.sound-volume-menu-item {
+  padding: 8px 12px;
+}
+
+.sound-player {
+  padding: 4px;
+  margin: 4px;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sound-player-generic-coverart {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+}
+
+.sound-player-overlay {
+  width: 290px;
+  padding: 12px;
+  color: #ffffff;
+  background-color: rgba(20, 20, 20, 0.7);
+  border-radius: 8px;
+}
+
+.sound-player-overlay StButton {
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  border-radius: 16px;
+  color: #ffffff;
+  transition-duration: 200ms;
+}
+
+.sound-player-overlay StButton:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.sound-player-overlay StButton:active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.sound-playback-control {
+  padding: 8px;
+  border-radius: 50%;
+  transition-duration: 200ms;
+}
+
+.sound-playback-control:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.sound-playback-control:active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Power/Battery Applet */
+.popup-device-menu-item {
+  spacing: 0.5em;
+  padding: 0.5em;
+}
+
+.popup-device-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Network Applet */
+.nm-menu-item-icons {
+  spacing: 0.5em;
+}
+
+/* ===================================================================
+ * 7. Sliders, Switches & UI Elements
+ * =================================================================== */
+.slider {
+  height: 6px;
+  -slider-height: 6px;
+  -slider-background-color: rgba(255, 255, 255, 0.15);
+  -slider-active-background-color: #007AFF;
+  -slider-border-color: transparent;
+  -slider-active-border-color: transparent;
+  -slider-border-width: 0;
+  -slider-handle-radius: 8px;
+}
+
+.popup-slider-menu-item {
+  height: 1.2em;
+  min-width: 15em;
+}
+
+.toggle-switch {
+  width: 44px;
+  height: 24px;
+}
+
+.toggle-switch-us {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.toggle-switch-us:checked {
+  background-color: rgba(0, 122, 255, 0.85);
+  border: 1px solid #007AFF;
+}
+
+.check-box CinnamonGenericContainer,
+.check-box-2 CinnamonGenericContainer {
+  spacing: 0.2em;
+  min-height: 30px;
+  padding-top: 2px;
+}
+
+.check-box StBin, .check-box-2 StBin {
+  width: 16px;
+  height: 16px;
+  background-image: url("assets/checkbox-unchecked.svg");
+}
+
+.check-box:checked StBin, .check-box-2:checked StBin {
+  background-image: url("assets/checkbox-checked.svg");
+}
+
+.radiobutton CinnamonGenericContainer {
+  height: 26px;
+  spacing: 0.2em;
+  padding-top: 2px;
+}
+
+.radiobutton StBin {
+  width: 16px;
+  height: 16px;
+  background-image: url("assets/radio-unchecked.svg");
+}
+
+.radiobutton:checked StBin {
+  background-image: url("assets/radio-checked.svg");
+}
+
+.check-box StLabel, .check-box-2 StLabel, .radiobutton StLabel {
+  font-weight: 500;
+  padding-left: 6px;
+}
+
+/* Desklets & Scrollbars */
+.desklet-with-borders {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background-color: rgba(30, 30, 30, 0.65);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  padding: 16px;
+}
+
+StScrollView StScrollBar {
+  min-height: 10px;
+  min-width: 10px;
+}
+
+StScrollBar StBin#trough {
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+}
+
+StScrollBar StButton#vhandle,
+StScrollBar StButton#hhandle {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  transition-duration: 250ms;
+}
+
+StScrollBar StButton#vhandle:hover,
+StScrollBar StButton#hhandle:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}

@@ -95,3 +95,30 @@
     margin: 1px;
 }
 
+.calendar-today {
+    border: 1px solid rgba(200, 200, 200, 0.7) !important;
+    border-radius: 4px !important;
+    background-color: rgba(128, 128, 128, 0.3) !important;
+}
+
+.calendar-day-heading.calendar-nonwork-day,
+.calendar-day.calendar-nonwork-day,
+.calendar-nonwork-day {
+    color: #ff0000 !important;
+}
+
+/* Specific styling for Fridays (Jomeh) as holidays */
+.calendar-friday,
+.calendar-day-heading.calendar-friday,
+.calendar-day.calendar-friday,
+.calendar-day.calendar-friday:hover,
+.calendar-day.calendar-friday:active,
+.calendar-day.calendar-friday:focus,
+.calendar-day.calendar-friday:selected,
+.calendar-day.calendar-friday:focus:selected {
+    color: #ef5350 !important;
+}
+
+.calendar-day.calendar-friday.calendar-other-month-day {
+    color: rgba(239, 83, 80, 0.6) !important;
+}

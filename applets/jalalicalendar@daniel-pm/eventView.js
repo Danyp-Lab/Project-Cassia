@@ -14,6 +14,8 @@ const Separator = imports.ui.separator;
 const Util = imports.misc.util;
 const Mainloop = imports.mainloop;
 const DateUtils = require('./modules/date-utils');
+const Logger = require('./modules/logger');
+const SignalManager = require('./modules/signal-manager');
 
 const STATUS_UNKNOWN = 0;
 const STATUS_NO_CALENDARS = 1;
@@ -48,7 +50,7 @@ const CustomEvents = {
                                 resolve([]);
                             }
                         } catch (e) {
-                            global.logWarning(`[Jalali Calendar] Error loading ${filename}: ${e.message}`);
+                            Logger.warn(`Error loading ${filename}: ${e.message}`);
                             resolve([]);
                         }
                     });
@@ -59,7 +61,7 @@ const CustomEvents = {
             this.hijriEvents = await loadJson('mevents.json');
             this.loaded = true;
         } catch (e) {
-            global.logWarning(`[Jalali Calendar] Critical error loading custom events: ${e.message}`);
+            Logger.warn(`Critical error loading custom events: ${e.message}`);
         }
     }
 };
@@ -269,6 +271,7 @@ class EventsManager {
     constructor(settings, desktop_settings) {
         this.settings = settings;
         this.desktop_settings = desktop_settings;
+        this.signals = new SignalManager();
         this._bus_watch_id = 0;
         this._calendar_server = null;
         this.current_month_year = null;
@@ -279,25 +282,13 @@ class EventsManager {
         this._cached_state = STATUS_UNKNOWN;
         this._gc_timer_id = 0;
         this._reload_today_id = 0;
-        this._calendar_server_signals = [];
         this._event_list = null;
 
         CustomEvents.loadAsync();
     }
 
     destroy() {
-        if (this._bus_watch_id > 0) {
-            Gio.bus_unwatch_name(this._bus_watch_id);
-            this._bus_watch_id = 0;
-        }
-        if (this._calendar_server) {
-            for (let id of this._calendar_server_signals) {
-                this._calendar_server.disconnect(id);
-            }
-            this._calendar_server_signals = [];
-        }
-        this._stop_gc_timer();
-        this._cancel_reload_today();
+        this.signals.destroy();
         if (this._event_list) {
             this._event_list.destroy();
             this._event_list = null;
@@ -305,7 +296,7 @@ class EventsManager {
     }
 
     start_events() {
-        this._bus_watch_id = Gio.bus_watch_name(
+        this._bus_watch_id = this.signals.watchBusName(
             Gio.BusType.SESSION,
             EDS_BUS_NAME,
             Gio.BusNameWatcherFlags.NONE,
@@ -315,7 +306,7 @@ class EventsManager {
     }
 
     eds_service_found() {
-        Gio.bus_unwatch_name(this._bus_watch_id);
+        this.signals.removeBusWatch(this._bus_watch_id);
         this._bus_watch_id = 0;
 
         if (this._calendar_server == null) {
@@ -334,29 +325,27 @@ class EventsManager {
         try {
             this._calendar_server = Cinnamon.CalendarServerProxy.new_for_bus_finish(res);
 
-            this._calendar_server_signals.push(this._calendar_server.connect("events-added-or-updated", this._handle_added_or_updated_events.bind(this)));
-            this._calendar_server_signals.push(this._calendar_server.connect("events-removed", this._handle_removed_events.bind(this)));
-            this._calendar_server_signals.push(this._calendar_server.connect("client-disappeared", this._handle_client_disappeared.bind(this)));
-            this._calendar_server_signals.push(this._calendar_server.connect("notify::status", this._handle_status_notify.bind(this)));
+            this.signals.connectSignal(this._calendar_server, "events-added-or-updated", this._handle_added_or_updated_events.bind(this));
+            this.signals.connectSignal(this._calendar_server, "events-removed", this._handle_removed_events.bind(this));
+            this.signals.connectSignal(this._calendar_server, "client-disappeared", this._handle_client_disappeared.bind(this));
+            this.signals.connectSignal(this._calendar_server, "notify::status", this._handle_status_notify.bind(this));
 
             this._inited = true;
             this.emit("events-manager-ready");
         } catch (e) {
-            global.logWarning("[Jalali Calendar] Could not connect to calendar server process: " + e);
+            Logger.warn(`Could not connect to calendar server process: ${e.message}`);
         }
     }
 
     _stop_gc_timer() {
-        if (this._gc_timer_id > 0) {
-            Mainloop.source_remove(this._gc_timer_id);
-            this._gc_timer_id = 0;
-        }
+        this.signals.removeTimeout(this._gc_timer_id);
+        this._gc_timer_id = 0;
     }
 
     _start_gc_timer() {
         this._stop_gc_timer();
         if (!this.is_active()) return;
-        this._gc_timer_id = Mainloop.timeout_add_seconds(3, () => this._perform_gc());
+        this._gc_timer_id = this.signals.addTimeout(Mainloop.timeout_add_seconds, 3, () => this._perform_gc());
     }
 
     _perform_gc() {
@@ -455,7 +444,7 @@ class EventsManager {
                 try {
                     this._calendar_server.call_set_time_range_finish(res);
                 } catch (e) {
-                    global.logWarning(`[Jalali Calendar] Error setting time range: ${e.message}`);
+                    Logger.warn(`Error setting time range: ${e.message}`);
                 }
             }
         );
@@ -463,17 +452,15 @@ class EventsManager {
     }
 
     _cancel_reload_today() {
-        if (this._reload_today_id > 0) {
-            Mainloop.source_remove(this._reload_today_id);
-            this._reload_today_id = 0;
-        }
+        this.signals.removeTimeout(this._reload_today_id);
+        this._reload_today_id = 0;
     }
 
     queue_reload_today(force) {
         this._cancel_reload_today();
         if (force) this._force_reload_pending = true;
         
-        this._reload_today_id = Mainloop.idle_add(() => {
+        this._reload_today_id = this.signals.addTimeout(Mainloop.idle_add, () => {
             this._reload_today_id = 0;
             this.select_date(new Date(), this._force_reload_pending);
             this._force_reload_pending = false;
@@ -521,6 +508,7 @@ class EventList {
     constructor(settings, desktop_settings) {
         this.settings = settings;
         this.desktop_settings = desktop_settings;
+        this.signals = new SignalManager();
         this.selected_date = GLib.DateTime.new_now_local();
         this._no_events_timeout_id = 0;
         this._scroll_to_idle_id = 0;
@@ -590,14 +578,7 @@ class EventList {
     }
 
     destroy() {
-        if (this._no_events_timeout_id > 0) {
-            Mainloop.source_remove(this._no_events_timeout_id);
-            this._no_events_timeout_id = 0;
-        }
-        if (this._scroll_to_idle_id > 0) {
-            Mainloop.source_remove(this._scroll_to_idle_id);
-            this._scroll_to_idle_id = 0;
-        }
+        this.signals.destroy();
     }
 
     launch_calendar(gdate) {
@@ -614,10 +595,8 @@ class EventList {
     }
 
     set_events(event_data_list, delay_no_events_box) {
-        if (this._scroll_to_idle_id > 0) {
-            Mainloop.source_remove(this._scroll_to_idle_id);
-            this._scroll_to_idle_id = 0;
-        }
+        this.signals.removeTimeout(this._scroll_to_idle_id);
+        this._scroll_to_idle_id = 0;
 
         if (event_data_list !== null && event_data_list.timestamp === this._current_event_data_list_timestamp) {
             this._rows.forEach((row) => row.update_variations());
@@ -633,14 +612,12 @@ class EventList {
         });
         this._rows = [];
 
-        if (this._no_events_timeout_id > 0) {
-            Mainloop.source_remove(this._no_events_timeout_id);
-            this._no_events_timeout_id = 0;
-        }
+        this.signals.removeTimeout(this._no_events_timeout_id);
+        this._no_events_timeout_id = 0;
 
         if (event_data_list === null) {
             if (delay_no_events_box) {
-                this._no_events_timeout_id = Mainloop.timeout_add(600, () => {
+                this._no_events_timeout_id = this.signals.addTimeout(Mainloop.timeout_add, 600, () => {
                     this._no_events_timeout_id = 0;
                     this.no_events_box.show();
                     return GLib.SOURCE_REMOVE;
@@ -677,7 +654,7 @@ class EventList {
 
         if (scroll_to_row == null) return;
 
-        this._scroll_to_idle_id = Mainloop.idle_add(() => {
+        this._scroll_to_idle_id = this.signals.addTimeout(Mainloop.idle_add, () => {
             let vscroll = this.events_scroll_box.get_vscroll_bar();
             if (scroll_to_row != null) {
                 let mid_position = scroll_to_row.actor.y + (scroll_to_row.actor.height / 2) - (this.events_box.height / 2);

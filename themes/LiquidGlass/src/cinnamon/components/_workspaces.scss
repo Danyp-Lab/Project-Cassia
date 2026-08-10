@@ -1,0 +1,61 @@
+/* ===================================================================
+ * 5. Window Switcher & Workspaces
+ * =================================================================== */
+.switcher-list {
+    @include glass-osd;
+    padding: 20px;
+}
+
+.switcher-list .item-box {
+    padding: 12px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background-color: transparent;
+    transition-duration: 200ms;
+}
+
+.switcher-list .item-box:selected {
+    background-color: $selected_bg;
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.workspace-thumbnails {
+    spacing: 32px;
+}
+
+.expo-workspace-thumbnail-frame {
+    border: 2px solid $border_light;
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.expo-workspace-thumbnail-frame#active {
+    border: 2px solid $accent_blue_solid;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.expo-background {
+    background-color: rgba(20, 20, 20, 0.7); /* Glassy blur effect equivalent */
+}
+
+.window-close, .workspace-close-button {
+    background-image: url("assets/close.svg");
+    background-size: 20px;
+    height: 20px;
+    width: 20px;
+    -cinnamon-close-overlap: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition-duration: 150ms;
+}
+
+.window-close:hover, .workspace-close-button:hover {
+    background-color: $accent_red_solid;
+    background-image: url("assets/close-hover.svg");
+}
+
+.window-close:active, .workspace-close-button:active {
+    background-color: $accent_red_dark;
+}

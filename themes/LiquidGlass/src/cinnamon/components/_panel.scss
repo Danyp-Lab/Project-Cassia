@@ -1,0 +1,122 @@
+/* ===================================================================
+ * 2. Panel
+ * =================================================================== */
+#panel {
+    @include glass-panel;
+}
+
+#panelLeft, #panelCenter, #panelRight {
+    padding: 0px 6px;
+    spacing: 4px;
+}
+
+/* Floating panel variant (for specific setups) */
+.floating-panel #panel {
+    border-radius: 16px;
+    margin: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.applet-box, .window-button, .panel-button {
+    color: rgba(255, 255, 255, 0.9);
+    padding: 0px 8px;
+    margin: 2px 2px;
+    @include button-base;
+}
+
+.applet-box:hover, .window-button:hover, .panel-button:hover {
+    @include button-hover;
+}
+
+.applet-box:active, .window-button:active, .panel-button:active,
+.applet-box:checked, .window-button:checked, .panel-button:checked {
+    @include button-active;
+}
+
+/* Grouped Window List Applet (Cinnamon 6+ Standard Taskbar) */
+.grouped-window-list-item-box {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 2px 2px;
+    @include button-base;
+}
+
+.grouped-window-list-item-box:hover, .grouped-window-list-item-box:focus {
+    @include button-hover;
+}
+
+.grouped-window-list-item-box:active, .grouped-window-list-item-box:checked {
+    @include button-active;
+}
+
+.grouped-window-list-item-label {
+    padding-left: 4px;
+}
+
+.window-list-preview {
+    background-color: $bg_tooltip;
+    border: 1px solid $border_medium;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    color: $fg_color;
+    padding: 8px;
+}
+
+/* Grouped Window List Thumbnail Menu (Preview for Multi-Windows) */
+.grouped-window-list-thumbnail-menu {
+    padding: 4px;
+    border: 1px solid $border_medium;
+    border-radius: 12px;
+    background-color: $bg_tooltip;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    color: $fg_color;
+}
+
+.grouped-window-list-thumbnail-menu .item-box {
+    border-radius: 8px;
+    background-color: transparent;
+    padding: 4px;
+    transition-duration: 150ms;
+}
+
+.grouped-window-list-thumbnail-menu .item-box:outlined,
+.grouped-window-list-thumbnail-menu .item-box:selected,
+.grouped-window-list-thumbnail-menu .item-box:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.grouped-window-list-thumbnail-menu .thumbnail {
+    width: 256px;
+    padding-top: 4px;
+}
+
+.grouped-window-list-thumbnail-menu .thumbnail-box {
+    padding: 2px;
+    spacing: 4px;
+}
+
+.grouped-window-list-thumbnail-menu .separator {
+    width: 1px;
+    background: $border_light;
+}
+
+.grouped-window-list-thumbnail-menu .window-close {
+    background-image: url("assets/close.svg");
+    background-size: 20px;
+    height: 20px;
+    width: 20px;
+    -cinnamon-close-overlap: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition-duration: 150ms;
+}
+
+.grouped-window-list-thumbnail-menu .window-close:hover {
+    background-color: $accent_red_solid;
+    background-image: url("assets/close-hover.svg");
+}
+
+.grouped-window-list-thumbnail-menu .window-close:active {
+    background-color: $accent_red_dark;
+}

@@ -1,0 +1,16 @@
+{
+  "name": "liquidglass",
+  "version": "1.0.0",
+  "description": "LiquidGlass is a sleek, dark, and modern theme designed specifically for the Cinnamon desktop environment. It brings a subtle \"frosted glass\" aesthetic to your panels, menus, and applications, giving your system a polished, premium feel.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "sass": "^1.102.0"
+  }
+}

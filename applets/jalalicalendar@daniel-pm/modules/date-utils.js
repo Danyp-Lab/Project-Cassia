@@ -4,6 +4,8 @@
  * Optimized for performance by caching Intl formatters.
  */
 
+const Logger = require('./modules/logger');
+
 const FARSI_MONTH_NAMES = [
     "فروردین", "اردیبهشت", "خرداد",
     "تیر", "مرداد", "شهریور",
@@ -30,6 +32,11 @@ const HIJRI_MONTH_NAMES = [
     "محرم", "صفر", "ربیع‌الاول", "ربیع‌الثانی",
     "جمادی‌الاول", "جمادی‌الثانی", "رجب", "شعبان",
     "رمضان", "شوال", "ذی‌القعده", "ذی‌الحجه"
+];
+
+const GREGORIAN_MONTH_NAMES = [
+    "ژانویه", "فوریه", "مارس", "آوریل", "مه", "ژوئن",
+    "ژوئیه", "آگوست", "سپتامبر", "اکتبر", "نوامبر", "دسامبر"
 ];
 
 const HIJRI_MONTH_OFFSETS = [185, 214, 244, 274, 303, 335, 9, 38, 67, 97, 127, 155];
@@ -113,7 +120,7 @@ function getIslamicDateParts(date) {
         }
         return res;
     } catch (e) {
-        global.logWarning(`[Jalali Calendar] Error parsing Islamic date: ${e.message}`);
+        Logger.warn(`Error parsing Islamic date: ${e.message}`);
         return { error: true };
     }
 }
@@ -126,9 +133,20 @@ function getIslamicDateParts(date) {
  * @returns {Date} The equivalent Gregorian Date
  */
 function persianToGregorianIntl(pyear, pmonth, pday) {
-    // A heuristic estimate to start the search
-    const candidate = new Date(pyear + 621, pmonth - 1, pday, 12, 0, 0);
-    const offsets = [0, -1, 1, -2, 2, -3, 3];
+    // Calculate days passed since Farvardin 1 (month 1, day 1)
+    let days = 0;
+    for (let i = 1; i < pmonth; i++) {
+        days += (i <= 6) ? 31 : 30;
+    }
+    days += (pday - 1);
+
+    // Farvardin 1 is usually March 21st (Month 2, Day 21 in JS Date)
+    // The year in Gregorian is pyear + 621.
+    const candidate = new Date(pyear + 621, 2, 21, 12, 0, 0);
+    candidate.setDate(candidate.getDate() + days);
+
+    // Expand the offsets slightly to handle any minor leap year misalignment
+    const offsets = [0, -1, 1, -2, 2, -3, 3, -4, 4, -5, 5];
     
     for (const offset of offsets) {
         const adj = new Date(candidate.getTime() + offset * 86400000);
@@ -137,6 +155,8 @@ function persianToGregorianIntl(pyear, pmonth, pday) {
             return adj;
         }
     }
+    
+    // If not found (shouldn't happen for valid dates), return candidate
     return candidate;
 }
 
@@ -164,8 +184,8 @@ class JDate {
             this.#d = new Date((a instanceof JDate) ? a.getNativeDate() : a);
         } else {
             const py = a;
-            const pm = (month || 0) + 1;
-            const pd = day || 1;
+            const pm = (month === undefined || month === null) ? 1 : (month + 1);
+            const pd = (day === undefined || day === null) ? 1 : day;
             const gDate = persianToGregorianIntl(py, pm, pd);
             this.#d = new Date(
                 gDate.getFullYear(), gDate.getMonth(), gDate.getDate(), 
@@ -271,18 +291,32 @@ function getIslamicDateString(jdate) {
     return farsiNumbers(`${parts.day} ${monthName} ${parts.year}`);
 }
 
+/**
+ * Produces a formatted string representing the Gregorian date in Farsi.
+ */
+function getGregorianDateString(date) {
+    const d = (date instanceof Date) ? date : new Date(date);
+    const dayName = FARSI_DAY_NAMES[d.getDay()];
+    const day = d.getDate();
+    const monthName = GREGORIAN_MONTH_NAMES[d.getMonth()];
+    const year = d.getFullYear();
+    return farsiNumbers(`${dayName} ${day} ${monthName} ${year}`);
+}
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         JDate,
         farsiNumbers,
         toLocaleFormat,
         getIslamicDateString,
+        getGregorianDateString,
         getPersianDateParts,
         getIslamicDateParts,
         getHijriEventIndex,
         FARSI_MONTH_NAMES,
         FARSI_DAY_NAMES,
         FARSI_DAY_NAMES_SHORT,
+        GREGORIAN_MONTH_NAMES,
         sameDay,
         isWorkDay,
         getCalendarDayAbbreviation,

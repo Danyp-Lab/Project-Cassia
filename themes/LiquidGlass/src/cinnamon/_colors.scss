@@ -1,0 +1,27 @@
+/* Liquid Glass Apple Palette */
+$fg_color: #ffffff;
+$fg_highlight: #ffffff;
+$fg_insensitive: rgba(255, 255, 255, 0.4);
+
+$bg_panel: rgba(30, 30, 30, 0.45);
+$bg_menu: rgba(40, 40, 40, 0.55);
+$bg_osd: rgba(35, 35, 35, 0.65);
+$bg_dialog: rgba(45, 45, 45, 0.70);
+$bg_tooltip: rgba(20, 20, 20, 0.85);
+
+$hover_bg: rgba(255, 255, 255, 0.12);
+$active_bg: rgba(255, 255, 255, 0.20);
+$selected_bg: rgba(0, 122, 255, 0.85); /* macOS Blue */
+
+$border_light: rgba(255, 255, 255, 0.08);
+$border_medium: rgba(255, 255, 255, 0.15);
+$border_strong: rgba(255, 255, 255, 0.25);
+
+$accent_blue: rgba(0, 122, 255, 0.85);
+$accent_blue_hover: rgba(10, 132, 255, 0.95);
+$accent_blue_solid: #007AFF;
+
+$accent_red: rgba(255, 59, 48, 0.85);
+$accent_red_hover: rgba(255, 69, 58, 0.95);
+$accent_red_solid: #FF3B30;
+$accent_red_dark: #D70015;
