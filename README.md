@@ -1,73 +1,81 @@
-# Project Cassia 🍃
+# Project Cassia
 
 ![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 ![Platform](https://img.shields.io/badge/Platform-Cinnamon-orange.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
+![Status](https://img.shields.io/badge/Status-Active_Development-brightgreen.svg)
 
-**Project Cassia** is an advanced suite of high-performance JavaScript applets, UI components, and productivity widgets engineered for the Cinnamon Desktop Environment. 
+Project Cassia is a suite of JavaScript applets, UI components, and productivity widgets designed for the Cinnamon Desktop Environment. The goal is to provide a cohesive ecosystem of extensions and themes that prioritize developer productivity and modern aesthetics.
 
-Designed with modern aesthetics and structural stability, this framework provides robust, memory-safe alternatives to standard desktop widgets. 
+## Included Applets
 
-## 📦 Included Components
+| Applet | Description |
+|---|---|
+| **Modern Hijri Shamsi Calendar** (`jalalicalendar@daniel-pm`) | A robust, multi-calendar engine supporting Gregorian, Jalali (Shamsi), and Hijri (Lunar) dates. Features memory-safe layout allocation, integration with Evolution Data Server (EDS), and a glassmorphism design with seasonal themes. |
 
-### 1. Modern Hijri Shamsi Calendar (`jalalicalendar@daniel-pm`)
-A highly optimized, multi-calendar applet that seamlessly integrates with the Cinnamon desktop.
+## Included Themes
 
-**Key Features:**
-*   **Multi-Calendar Engine:** Synchronized support for Gregorian, Jalali (Shamsi), and Hijri (Lunar) dates using precise epoch conversion algorithms.
-*   **Modern UI/UX:** Features a glassmorphism design language with seasonal theme borders (Spring, Summer, Autumn, Winter) and an annual progress bar.
-*   **Robust Event Handling:** Fully integrated with `gnome-calendar` and Evolution Data Server (EDS). Engineered with strict Clutter layout allocation handling, ensuring zero black-screen panics or window manager crashes during rapid UI rendering.
-*   **Advanced Rendering:** Custom logic for parsing spanning events, color-coded categories, and zero-width fallback rendering.
+| Theme | Description |
+|---|---|
+| **LiquidGlass** | A modern glassmorphism Cinnamon theme designed for high-end aesthetics, featuring panel transparency, custom popover styling, and smooth hover state animations. |
 
-## 📂 Repository Structure
+## Repository Structure
+
+The repository is structured to separate different types of Cinnamon components. Contributors can use these directories to add new features or enhancements.
 
 ```text
 project-cassia/
-├── applets/
-│   └── jalalicalendar@daniel-pm/   # Modern Hijri Shamsi Calendar
-│       ├── applet.js               # Main loop and UI hooks
-│       ├── calendar.js             # Core Clutter UI and layout allocation
-│       ├── eventView.js            # EDS data parsing and event rows
-│       ├── metadata.json           # Applet registry
-│       ├── stylesheet.css          # Glassmorphic and seasonal styling
-│       └── modules/
-│           └── date-utils.js       # Epoch conversion algorithms
-├── themes/                         # (Planned) Cinnamon shell themes
-├── desklets/                       # (Planned) Desktop widgets
-├── extensions/                     # (Planned) Window manager enhancements
-├── assets/                         # Repository images and social previews
-└── README.md                       # Repository documentation
+├── applets/                        # Cinnamon panel applets (e.g., jalalicalendar@daniel-pm)
+├── themes/                         # Cinnamon shell themes
+├── desklets/                       # Desktop widgets
+├── extensions/                     # Window manager enhancements
+├── assets/                         # Repository images and assets
+└── README.md                       # Project documentation
 ```
 
-## 🚀 Installation
+## Installation & Developer Setup
 
-To install the components, you can manually link them to your Cinnamon local share directory.
+To install the currently available components, follow these steps to link them to your local Cinnamon share directory.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/DanialPahlavan/Project-Cassia.git
-   cd Project-Cassia
-   ```
+### 1. Clone the Repository
+```bash
+git clone https://github.com/DanialPahlavan/Project-Cassia.git
+cd Project-Cassia
+```
 
-2. **Install the Applet:**
-   Copy the applet folder to your local Cinnamon applets directory:
-   ```bash
-   cp -r applets/jalalicalendar@daniel-pm ~/.local/share/cinnamon/applets/
-   ```
-   *Alternatively, for local development and testing:*
-   ```bash
-   ln -s $(pwd)/applets/jalalicalendar@daniel-pm ~/.local/share/cinnamon/applets/
-   ```
+### 2. Install the Applet
+Copy the applet to your local Cinnamon applets directory:
+```bash
+cp -r applets/jalalicalendar@daniel-pm ~/.local/share/cinnamon/applets/
+```
 
-3. **Enable the Applet:**
-   * Right-click your panel and select **Applets**.
-   * Navigate to the **Manage** tab, find "Modern Hijri Shamsi Calendar", and click the `+` to add it to your panel.
+*For local development and testing (Symlink approach):*
+```bash
+ln -s $(pwd)/applets/jalalicalendar@daniel-pm ~/.local/share/cinnamon/applets/
+```
 
-## 👨‍💻 Maintainer
+### 3. Install the Theme
+Copy the theme to your local themes directory:
+```bash
+mkdir -p ~/.themes
+cp -r themes/LiquidGlass ~/.themes/
+```
 
-**Danial Pahlavan Masouri**  
-*PhD Candidate in Computer Science - Artificial Intelligence*
+*For local development and testing (Symlink approach):*
+```bash
+mkdir -p ~/.themes
+ln -s $(pwd)/themes/LiquidGlass ~/.themes/
+```
 
-## 📄 License
+### 4. Enable the Components
+**Applet:**
+1. Right-click your Cinnamon panel and select **Applets**.
+2. Navigate to the **Manage** tab.
+3. Locate **Modern Hijri Shamsi Calendar** and click the `+` icon to add it to your panel.
 
-This project is licensed under the [GNU General Public License v3.0](LICENSE) - see the LICENSE file for details.
+**Theme:**
+1. Open **System Settings** -> **Themes**.
+2. Change the Desktop, Controls, or Borders theme to **LiquidGlass**.
+
+## License
+
+This project is open-sourced under the [GNU General Public License v3.0](LICENSE). Please review the `LICENSE` file for further details.

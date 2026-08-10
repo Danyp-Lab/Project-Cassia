@@ -10,11 +10,12 @@ const Gettext_gtk30 = imports.gettext.domain('gtk30');
 const Cinnamon = imports.gi.Cinnamon;
 const Mainloop = imports.mainloop;
 const DateUtils = require('./modules/date-utils');
+const Logger = require('./modules/logger');
+const SignalManager = require('./modules/signal-manager');
 
 const MSECS_IN_DAY = 24 * 60 * 60 * 1000;
 const WEEKDATE_HEADER_WIDTH_DIGITS = 3;
 const SHOW_WEEKDATE_KEY = 'show-week-numbers';
-const FIRST_WEEKDAY_KEY = 'first-day-of-week';
 const DESKTOP_SCHEMA = 'org.cinnamon.desktop.interface';
 
 function _sameDay(dateA, dateB) {
@@ -37,23 +38,25 @@ function _getDigitWidth(actor) {
 class Calendar {
     constructor(settings, events_manager) {
         this.events_manager = events_manager;
-        this._weekStart = Cinnamon.util_get_week_start();
+        this._weekStart = 6; // Jalali calendar always starts on Saturday
         this._digitWidth = NaN;
         this.settings = settings;
 
+        this.signals = new SignalManager();
         this._update_id = 0;
         this._set_date_idle_id = 0;
-        this._signalHandlers = [];
+
+        this._dayCells = [];
+        this._weekNumberCells = [];
 
         this.settings.bindWithObject(this, "show-week-numbers", "show_week_numbers", this._onSettingsChange);
         this.desktop_settings = new Gio.Settings({ schema_id: DESKTOP_SCHEMA });
-        this._desktopSettingsId = this.desktop_settings.connect("changed::" + FIRST_WEEKDAY_KEY, (...args) => this._onSettingsChange(...args));
 
         this.events_enabled = false;
         
-        this._connectSignal(this.events_manager, "events-updated", this._events_updated.bind(this));
-        this._connectSignal(this.events_manager, "events-manager-ready", this._update_events_enabled.bind(this));
-        this._connectSignal(this.events_manager, "has-calendars-changed", this._update_events_enabled.bind(this));
+        this.signals.connectSignal(this.events_manager, "events-updated", this._events_updated.bind(this));
+        this.signals.connectSignal(this.events_manager, "events-manager-ready", this._update_events_enabled.bind(this));
+        this.signals.connectSignal(this.events_manager, "has-calendars-changed", this._update_events_enabled.bind(this));
 
         let var_name = 'calendar:MY';
         switch (Gettext_gtk30.gettext(var_name)) {
@@ -77,44 +80,27 @@ class Calendar {
         this._buildHeader();
     }
 
-    _connectSignal(obj, signal, callback) {
-        let id = obj.connect(signal, callback);
-        this._signalHandlers.push({ obj: obj, id: id });
-        return id;
-    }
-
     _events_updated() {
         this._queue_update();
     }
 
     _cancel_update() {
-        if (this._update_id > 0) {
-            Mainloop.source_remove(this._update_id);
-            this._update_id = 0;
-        }
+        this.signals.removeTimeout(this._update_id);
+        this._update_id = 0;
     }
 
     destroy() {
-        if (this._desktopSettingsId) {
-            this.desktop_settings.disconnect(this._desktopSettingsId);
-            this._desktopSettingsId = 0;
-        }
+        this.signals.destroy();
         this._cancel_update();
         if (this._set_date_idle_id > 0) {
-            Mainloop.source_remove(this._set_date_idle_id);
+            this.signals.removeTimeout(this._set_date_idle_id);
             this._set_date_idle_id = 0;
         }
-        for (let handler of this._signalHandlers) {
-            if (handler.obj && handler.id) {
-                handler.obj.disconnect(handler.id);
-            }
-        }
-        this._signalHandlers = [];
     }
 
     _queue_update() {
         this._cancel_update();
-        this._update_id = Mainloop.idle_add(() => {
+        this._update_id = this.signals.addTimeout(Mainloop.idle_add, () => {
             this._update_id = 0;
             this._update();
             return GLib.SOURCE_REMOVE;
@@ -129,7 +115,7 @@ class Calendar {
 
     queue_set_date(date) {
         if (this._set_date_idle_id > 0) return;
-        this._set_date_idle_id = Mainloop.timeout_add(25, this._queue_set_date_idle.bind(this, date));
+        this._set_date_idle_id = this.signals.addTimeout(Mainloop.timeout_add, 25, this._queue_set_date_idle.bind(this, date));
     }
 
     _update_events_enabled() {
@@ -138,7 +124,6 @@ class Calendar {
     }
 
     _onSettingsChange(object, key) {
-        if (key === FIRST_WEEKDAY_KEY) this._weekStart = Cinnamon.util_get_week_start();
         this._buildHeader();
         this._update(false);
     }
@@ -167,6 +152,8 @@ class Calendar {
     _buildHeader() {
         let offsetCols = this.show_week_numbers ? 1 : 0;
         this.actor.destroy_all_children();
+        this._dayCells = [];
+        this._weekNumberCells = [];
 
         this._topBoxMonth = new St.BoxLayout();
         this._topBoxYear = new St.BoxLayout();
@@ -208,7 +195,8 @@ class Calendar {
         iter.setHours(12);
         
         for (let i = 0; i < 7; i++) {
-            let styleClass = `calendar-day-base calendar-day-heading ${DateUtils.isWorkDay(iter) ? 'calendar-work-day' : 'calendar-nonwork-day'}`;
+            let isFriday = iter.getDay() === 5;
+            let styleClass = `calendar-day-base calendar-day-heading ${isFriday ? 'calendar-friday' : (DateUtils.isWorkDay(iter) ? 'calendar-work-day' : 'calendar-nonwork-day')}`;
             let customDayAbbrev = DateUtils.getCalendarDayAbbreviation(iter.getDay());
             let label = new St.Label({ style_class: styleClass, text: customDayAbbrev });
             
@@ -236,6 +224,16 @@ class Calendar {
         }
     }
 
+    _getDaysInJalaliMonth(year, month) {
+        if (month >= 0 && month <= 5) return 31;
+        if (month >= 6 && month <= 10) return 30;
+        
+        // Month 11 (Esfand)
+        let nextYearFarvardin1 = new DateUtils.JDate(year + 1, 0, 1);
+        let lastDayOfEsfand = new DateUtils.JDate(nextYearFarvardin1.getTime() - MSECS_IN_DAY);
+        return lastDayOfEsfand.getDate();
+    }
+
     _applyDateBrowseAction(yearChange, monthChange) {
         let oldDate = this._selectedDate;
         let newMonth = oldDate.getMonth() + monthChange;
@@ -250,31 +248,18 @@ class Calendar {
         }
 
         let newDayOfMonth = oldDate.getDate();
-        let daysInMonth = 32 - new DateUtils.JDate(newYear, newMonth, 32).getDate();
+        let daysInMonth = this._getDaysInJalaliMonth(newYear, newMonth);
         if (newDayOfMonth > daysInMonth) {
             newDayOfMonth = daysInMonth;
         }
 
-        let newDate = new DateUtils.JDate();
-        newDate.setDate(newDayOfMonth);
-        newDate.setMonth(newMonth);
-        newDate.setFullYear(newYear);
+        let newDate = new DateUtils.JDate(newYear, newMonth, newDayOfMonth);
         this.queue_set_date(newDate);
     }
 
     _update(forceReload) {
         this._monthLabel.text = DateUtils.FARSI_MONTH_NAMES[this._selectedDate.getMonth()];
         this._yearLabel.text = DateUtils.farsiNumbers(this._selectedDate.getFullYear().toString());
-
-        let children = this.actor.get_children();
-        for (let i = this._firstDayIndex; i < children.length; i++) {
-            let child = children[i];
-            this.actor.remove_actor(child);
-            Mainloop.idle_add(() => {
-                if (child) child.destroy();
-                return GLib.SOURCE_REMOVE;
-            });
-        }
 
         let beginDate = new DateUtils.JDate(this._selectedDate);
         beginDate.setDate(1);
@@ -286,23 +271,48 @@ class Calendar {
 
         let iter = new DateUtils.JDate(beginDate);
         let row = 2;
+        let cellIndex = 0;
+        let offsetCols = this.show_week_numbers ? 1 : 0;
+
+        if (!this._dayCells) this._dayCells = [];
+        if (!this._weekNumberCells) this._weekNumberCells = [];
 
         while (true) {
-            let group = new Cinnamon.Stack();
-            let button = new St.Button({ label: DateUtils.farsiNumbers(iter.getDate().toString()) });
-            group.add_actor(button);
+            let group, button, dot_box;
+            
+            if (cellIndex < this._dayCells.length) {
+                let cellData = this._dayCells[cellIndex];
+                group = cellData.group;
+                button = cellData.button;
+                dot_box = cellData.dot_box;
+                group.show();
+            } else {
+                group = new Cinnamon.Stack();
+                button = new St.Button();
+                group.add_actor(button);
 
-            let dot_box = new Cinnamon.GenericContainer({ style_class: "calendar-day-event-dot-box" });
-            dot_box.connect('allocate', this._allocate_dot_box.bind(this));
-            group.add_actor(dot_box);
+                dot_box = new Cinnamon.GenericContainer({ style_class: "calendar-day-event-dot-box" });
+                dot_box.connect('allocate', this._allocate_dot_box.bind(this));
+                group.add_actor(dot_box);
+                
+                this.actor.add(group, { row: row, col: offsetCols + (7 + iter.getDay() - this._weekStart) % 7 }); 
+                this._dayCells.push({ group, button, dot_box });
+            }
 
+            button.label = DateUtils.farsiNumbers(iter.getDate().toString());
+            
             let iterStr = iter.getTime();
-            button.connect('clicked', () => {
-                if (!this.events_enabled) return;
-                this.setDate(new DateUtils.JDate(iterStr), false);
-            });
+            if (!this._dayCells[cellIndex].clickId) {
+                this._dayCells[cellIndex].clickId = button.connect('clicked', () => {
+                    if (!this.events_enabled) return;
+                    let currentIterStr = this._dayCells[cellIndex].currentIterStr;
+                    if (currentIterStr) this.setDate(new DateUtils.JDate(currentIterStr), false);
+                });
+            }
+            this._dayCells[cellIndex].currentIterStr = iterStr;
 
-            let styleClass = `calendar-day-base calendar-day ${DateUtils.isWorkDay(iter) ? 'calendar-work-day' : 'calendar-nonwork-day'}`;
+            let isFriday = iter.getDay() === 5;
+            let styleClass = `calendar-day-base calendar-day ${isFriday ? 'calendar-friday' : (DateUtils.isWorkDay(iter) ? 'calendar-work-day' : 'calendar-nonwork-day')}`;
             if (row === 2) styleClass = 'calendar-day-top ' + styleClass;
             if (iter.getDay() === this._weekStart) styleClass = 'calendar-day-left ' + styleClass;
 
@@ -310,22 +320,27 @@ class Calendar {
             else if (iter.getMonth() !== this._selectedDate.getMonth()) styleClass += ' calendar-other-month-day';
             else styleClass += ' calendar-not-today';
 
+            button.remove_style_pseudo_class('selected');
             if (_sameDay(this._selectedDate, iter)) {
                 button.add_style_pseudo_class('selected');
             }
             button.style_class = styleClass;
 
-            let offsetCols = this.show_week_numbers ? 1 : 0;
-            this.actor.add(group, { row: row, col: offsetCols + (7 + iter.getDay() - this._weekStart) % 7 });
-
             if (this.show_week_numbers && iter.getDay() === 4) {
-                let label = new St.Label({
-                    text: DateUtils.farsiNumbers(iter.getNativeDate().toLocaleFormat('%V')),
-                    style_class: 'calendar-day-base calendar-week-number'
-                });
-                this.actor.add(label, { row: row, col: 0, y_align: St.Align.MIDDLE });
+                let weekRow = row - 2;
+                let label;
+                if (weekRow < this._weekNumberCells.length) {
+                    label = this._weekNumberCells[weekRow];
+                    label.show();
+                } else {
+                    label = new St.Label({ style_class: 'calendar-day-base calendar-week-number' });
+                    this.actor.add(label, { row: row, col: 0, y_align: St.Align.MIDDLE });
+                    this._weekNumberCells.push(label);
+                }
+                label.text = DateUtils.farsiNumbers(iter.getNativeDate().toLocaleFormat('%V'));
             }
 
+            dot_box.destroy_all_children();
             let color_set = this.events_manager.get_colors_for_date(iter.getNativeDate());
             if (this.events_enabled && color_set !== null) {
                 for (let color of color_set) {
@@ -337,10 +352,26 @@ class Calendar {
                 }
             }
 
+            cellIndex++;
             iter.setTime(iter.getTime() + MSECS_IN_DAY);
             if (iter.getDay() === this._weekStart) {
                 row++;
                 if (row > 7) break;
+            }
+        }
+
+        for (let i = cellIndex; i < this._dayCells.length; i++) {
+            this._dayCells[i].group.hide();
+        }
+        
+        if (this.show_week_numbers) {
+            let expectedWeekRows = row - 2;
+            for (let i = expectedWeekRows; i < this._weekNumberCells.length; i++) {
+                this._weekNumberCells[i].hide();
+            }
+        } else {
+            for (let i = 0; i < this._weekNumberCells.length; i++) {
+                this._weekNumberCells[i].hide();
             }
         }
     }

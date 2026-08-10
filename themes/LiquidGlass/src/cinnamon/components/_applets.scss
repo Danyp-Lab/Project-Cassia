@@ -1,0 +1,142 @@
+/* ===================================================================
+ * 6. Applets (Calendar, Sound, Power, Network, etc.)
+ * =================================================================== */
+
+/* Calendar */
+.calendar {
+    margin-top: 12px;
+    spacing-rows: 2px;
+    spacing-columns: 2px;
+}
+
+.calendar-today-home-button, .calendar-today-home-button-enabled {
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition-duration: 200ms;
+}
+
+.calendar-today-home-button:hover, .calendar-today-home-button-enabled:hover {
+    background-color: $hover_bg;
+}
+
+.calendar-day-base {
+    text-align: center;
+    width: 2.6em;
+    height: 2.6em;
+    border-radius: 50%;
+    color: $fg_color;
+    transition-duration: 150ms;
+}
+
+.calendar-day-base:hover {
+    background-color: $hover_bg;
+    color: #ffffff;
+}
+
+.calendar-today {
+    background-color: $accent_blue; 
+    border: 1px solid $accent_blue_solid;
+    box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+}
+
+.calendar-other-month-day {
+    color: $fg_insensitive;
+}
+
+.calendar-not-today:selected {
+    background-color: $active_bg;
+}
+
+.calendar-events-main-box {
+    margin-right: 16px;
+    min-width: 320px;
+    border-right: 1px solid $border_light;
+}
+
+.calendar-event-button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition-duration: 200ms;
+}
+
+.calendar-event-button:hover {
+    background-color: $hover_bg;
+}
+
+/* Sound Applet */
+.sound-button {
+    padding: 8px;
+    border-radius: 8px;
+    transition-duration: 200ms;
+}
+.sound-button:hover {
+    background-color: $hover_bg;
+}
+.sound-volume-menu-item {
+    padding: 8px 12px;
+}
+
+.sound-player {
+    padding: 4px;
+    margin: 4px;
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid $border_light;
+}
+
+.sound-player-generic-coverart {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+}
+
+.sound-player-overlay {
+    width: 290px;
+    padding: 12px;
+    color: #ffffff;
+    background-color: rgba(20, 20, 20, 0.7);
+    border-radius: 8px;
+}
+
+.sound-player-overlay StButton {
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+    border-radius: 16px;
+    color: #ffffff;
+    transition-duration: 200ms;
+}
+
+.sound-player-overlay StButton:hover {
+    background-color: $hover_bg;
+}
+
+.sound-player-overlay StButton:active {
+    background-color: $active_bg;
+}
+
+.sound-playback-control {
+    padding: 8px;
+    border-radius: 50%;
+    transition-duration: 200ms;
+}
+.sound-playback-control:hover {
+    background-color: $hover_bg;
+}
+.sound-playback-control:active {
+    background-color: $active_bg;
+}
+
+/* Power/Battery Applet */
+.popup-device-menu-item {
+    spacing: .5em;
+    padding: .5em;
+}
+.popup-device-menu-item:hover {
+    background-color: $hover_bg;
+}
+
+/* Network Applet */
+.nm-menu-item-icons {
+    spacing: .5em;
+}

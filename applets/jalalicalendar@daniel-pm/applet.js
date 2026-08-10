@@ -12,6 +12,8 @@ const EventView = require('./eventView');
 const CinnamonDesktop = imports.gi.CinnamonDesktop;
 const Main = imports.ui.main;
 const DateUtils = require('./modules/date-utils');
+const Logger = require('./modules/logger');
+const SignalManager = require('./modules/signal-manager');
 
 const DAY_FORMAT = CinnamonDesktop.WallClock.lctime_format("cinnamon", "%A");
 const DATE_FORMAT_SHORT = CinnamonDesktop.WallClock.lctime_format("cinnamon", _("%B %-e, %Y"));
@@ -23,11 +25,8 @@ class CinnamonCalendarApplet extends Applet.TextApplet {
 
         this.setAllowedLayout(Applet.AllowedLayout.BOTH);
         
-        // Tracking cleanup IDs
-        this._desktopSettingsIds = [];
+        this.signals = new SignalManager();
         this.clock_notify_id = 0;
-        this._upClientNotifyId = 0;
-        this._signalHandlers = [];
 
         try {
             this.orientation = orientation;
@@ -44,7 +43,7 @@ class CinnamonCalendarApplet extends Applet.TextApplet {
             this._initPowerEvents();
             
         } catch (e) {
-            global.logError(`[Jalali Calendar] Initialization Error: ${e.message}`);
+            Logger.error(`Initialization Error`, e);
         }
     }
 
@@ -133,9 +132,9 @@ class CinnamonCalendarApplet extends Applet.TextApplet {
         this.settings.bind("keyOpen", "keyOpen", this._setKeybinding.bind(this));
         this._setKeybinding();
 
-        this._desktopSettingsIds.push(this.desktop_settings.connect("changed::clock-use-24h", () => this._onSettingsChanged()));
-        this._desktopSettingsIds.push(this.desktop_settings.connect("changed::clock-show-seconds", () => this._onSettingsChanged()));
-        this._desktopSettingsIds.push(this.desktop_settings.connect("changed::clock-show-date", () => this._onSettingsChanged()));
+        this.signals.connectSignal(this.desktop_settings, "changed::clock-use-24h", () => this._onSettingsChanged());
+        this.signals.connectSignal(this.desktop_settings, "changed::clock-show-seconds", () => this._onSettingsChanged());
+        this.signals.connectSignal(this.desktop_settings, "changed::clock-show-date", () => this._onSettingsChanged());
 
         this._connectSignal(this.events_manager, "events-manager-ready", this._events_manager_ready.bind(this));
         this._connectSignal(this.events_manager, "has-calendars-changed", this._has_calendars_changed.bind(this));
@@ -149,16 +148,14 @@ class CinnamonCalendarApplet extends Applet.TextApplet {
     _initPowerEvents() {
         this._upClient = new UPowerGlib.Client();
         try {
-            this._upClientNotifyId = this._upClient.connect('notify-resume', () => this._updateClockAndDate());
+            this.signals.connectSignal(this._upClient, 'notify-resume', () => this._updateClockAndDate());
         } catch (e) {
-            this._upClientNotifyId = this._upClient.connect('notify::resume', () => this._updateClockAndDate());
+            this.signals.connectSignal(this._upClient, 'notify::resume', () => this._updateClockAndDate());
         }
     }
 
     _connectSignal(obj, signal, callback) {
-        let id = obj.connect(signal, callback);
-        this._signalHandlers.push({ obj: obj, id: id });
-        return id;
+        return this.signals.connectSignal(obj, signal, callback);
     }
 
     _setKeybinding() {
@@ -203,7 +200,7 @@ class CinnamonCalendarApplet extends Applet.TextApplet {
             }
 
             if (!this.clock.set_format_string(custom_format)) {
-                global.logError("[Jalali Calendar] Bad time format string");
+                Logger.warn("Bad time format string");
                 this.clock.set_format_string("~CLOCK FORMAT ERROR~ %l:%M %p");
             }
         } else if (in_vertical_panel) {
@@ -264,13 +261,7 @@ class CinnamonCalendarApplet extends Applet.TextApplet {
 
         this.set_applet_label(label_string);
 
-        let dateFormattedTooltip = this.clock.get_clock_for_format(DATE_FORMAT_FULL).capitalize();
-        if (this.use_custom_format) {
-            dateFormattedTooltip = this.clock.get_clock_for_format(this.custom_tooltip_format).capitalize();
-            if (!dateFormattedTooltip) {
-                dateFormattedTooltip = this.clock.get_clock_for_format("~CLOCK FORMAT ERROR~ %l:%M %p");
-            }
-        }
+        let dateFormattedTooltip = DateUtils.getGregorianDateString(now);
 
         let farsiDateStr = DateUtils.toLocaleFormat(now, "%A %e %B %Y");
         let islamicDateStr = DateUtils.getIslamicDateString(now);
@@ -292,7 +283,7 @@ class CinnamonCalendarApplet extends Applet.TextApplet {
         this._onSettingsChanged();
 
         if (this.clock_notify_id === 0) {
-            this.clock_notify_id = this.clock.connect("notify::clock", () => this._clockNotify());
+            this.clock_notify_id = this.signals.connectSignal(this.clock, "notify::clock", () => this._clockNotify());
         }
 
         this.events_manager.start_events();
@@ -302,25 +293,8 @@ class CinnamonCalendarApplet extends Applet.TextApplet {
     on_applet_removed_from_panel() {
         Main.keybindingManager.removeXletHotKey(this, "calendar-open");
         
-        if (this.clock_notify_id > 0) {
-            this.clock.disconnect(this.clock_notify_id);
-            this.clock_notify_id = 0;
-        }
-        if (this._desktopSettingsIds) {
-            this._desktopSettingsIds.forEach(id => this.desktop_settings.disconnect(id));
-            this._desktopSettingsIds = [];
-        }
-        if (this._upClientNotifyId > 0) {
-            this._upClient.disconnect(this._upClientNotifyId);
-            this._upClientNotifyId = 0;
-        }
-        
-        for (let handler of this._signalHandlers) {
-            if (handler.obj && handler.id) {
-                handler.obj.disconnect(handler.id);
-            }
-        }
-        this._signalHandlers = [];
+        this.signals.destroy();
+        this.clock_notify_id = 0;
 
         if (this.events_manager) {
             this.events_manager.destroy();

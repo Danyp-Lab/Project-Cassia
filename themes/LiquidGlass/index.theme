@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=LiquidGlass
+Comment=A modern Liquid Glass / Glassmorphism theme for Cinnamon
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+Name=LiquidGlass
+GtkTheme=LiquidGlass
+IconTheme=Mint-Y
+MetacityTheme=LiquidGlass
+CursorTheme=DMZ-White
+ButtonLayout=close,minimize,maximize:

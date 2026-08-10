@@ -1,0 +1,133 @@
+@import url("/usr/share/themes/Mint-Y-Dark/gtk-3.0/gtk.css");
+@import "../cinnamon/colors";
+@import "../cinnamon/mixins";
+
+/* Metacity color overrides */
+@define-color wm_bg_a #2a2a2b;
+@define-color wm_bg_b #353538;
+@define-color theme_inverted_fg_color #ffffff;
+@define-color theme_unfocused_inverted_fg_color #a0a0a0;
+
+/* Reset backgrounds */
+window, 
+window.background,
+.background {
+    background-color: transparent;
+    background-image: none;
+}
+
+window.csd, window.solid-csd, window {
+    border-radius: 12px;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 0 1px $border_medium;
+    background-color: #2a2a2b;
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), transparent 40px);
+}
+
+/* Apply the semi-transparent glass color to the main containers */
+.nemo-window,
+notebook,
+paned,
+stack,
+box {
+    background-color: transparent;
+    background-image: none;
+}
+
+/* Nemo specific sidebar */
+.nemo-window .sidebar {
+    background-color: rgba(25, 25, 25, 0.5); /* Vibrancy effect */
+    border-right: 1px solid $border_light;
+}
+.nemo-window .view {
+    background-color: rgba(45, 45, 45, 0.6);
+}
+
+/* Headerbar Glass Effect */
+headerbar,
+.titlebar,
+.csd headerbar,
+.csd .titlebar:not(headerbar) {
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-bottom: 1px solid $border_light !important;
+    min-height: 46px;
+}
+
+/* Window Controls (Traffic Lights) */
+headerbar button.titlebutton,
+.titlebar button.titlebutton,
+window headerbar button.titlebutton,
+window .titlebar button.titlebutton {
+    min-width: 14px !important;
+    min-height: 14px !important;
+    padding: 0 !important;
+    margin: 0 4px !important;
+    border-radius: 50% !important;
+    color: transparent !important; /* Hide icons until hover */
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    background-clip: padding-box !important;
+    background-image: none !important;
+    -gtk-icon-theme: none !important;
+    background-size: 0 0 !important; /* Force hide Mint-Y background icons */
+}
+
+headerbar button.titlebutton:hover,
+.titlebar button.titlebutton:hover {
+    color: rgba(0, 0, 0, 0.6) !important;
+}
+
+headerbar button.titlebutton.close,
+.titlebar button.titlebutton.close {
+    background-color: #FF5F56 !important;
+}
+headerbar button.titlebutton.close:hover,
+.titlebar button.titlebutton.close:hover {
+    background-color: #FF746D !important;
+}
+headerbar button.titlebutton.close:active,
+.titlebar button.titlebutton.close:active {
+    background-color: #E24F47 !important;
+}
+
+headerbar button.titlebutton.minimize,
+.titlebar button.titlebutton.minimize {
+    background-color: #FFBD2E !important;
+}
+headerbar button.titlebutton.minimize:hover,
+.titlebar button.titlebutton.minimize:hover {
+    background-color: #FFC846 !important;
+}
+headerbar button.titlebutton.minimize:active,
+.titlebar button.titlebutton.minimize:active {
+    background-color: #E2A727 !important;
+}
+
+headerbar button.titlebutton.maximize,
+.titlebar button.titlebutton.maximize {
+    background-color: #27C93F !important;
+}
+headerbar button.titlebutton.maximize:hover,
+.titlebar button.titlebutton.maximize:hover {
+    background-color: #34D64D !important;
+}
+headerbar button.titlebutton.maximize:active,
+.titlebar button.titlebutton.maximize:active {
+    background-color: #1FAF33 !important;
+}
+
+/* Glass Buttons for headerbar */
+headerbar button:not(.titlebutton),
+.titlebar button:not(.titlebutton) {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid $border_light;
+    border-radius: 6px;
+    box-shadow: inset 0 1px 0 $border_light;
+    color: #ffffff;
+}
+
+headerbar button:not(.titlebutton):hover,
+.titlebar button:not(.titlebutton):hover {
+    background-color: $hover_bg;
+}

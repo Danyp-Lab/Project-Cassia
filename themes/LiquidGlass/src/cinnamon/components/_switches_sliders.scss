@@ -1,0 +1,103 @@
+/* ===================================================================
+ * 7. Sliders, Switches & UI Elements
+ * =================================================================== */
+.slider {
+    height: 6px;
+    -slider-height: 6px;
+    -slider-background-color: rgba(255, 255, 255, 0.15);
+    -slider-active-background-color: $accent_blue_solid;
+    -slider-border-color: transparent;
+    -slider-active-border-color: transparent;
+    -slider-border-width: 0;
+    -slider-handle-radius: 8px;
+}
+
+.popup-slider-menu-item {
+    height: 1.2em;
+    min-width: 15em;
+}
+
+.toggle-switch {
+    width: 44px;
+    height: 24px;
+}
+
+.toggle-switch-us {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    border: 1px solid $border_light;
+}
+
+.toggle-switch-us:checked {
+    background-color: $accent_blue;
+    border: 1px solid $accent_blue_solid;
+}
+
+.check-box CinnamonGenericContainer,
+.check-box-2 CinnamonGenericContainer {
+    spacing: .2em;
+    min-height: 30px;
+    padding-top: 2px;
+}
+
+.check-box StBin, .check-box-2 StBin {
+    width: 16px;
+    height: 16px;
+    background-image: url("assets/checkbox-unchecked.svg");
+}
+
+.check-box:checked StBin, .check-box-2:checked StBin {
+    background-image: url("assets/checkbox-checked.svg");
+}
+
+.radiobutton CinnamonGenericContainer {
+    height: 26px;
+    spacing: 0.2em;
+    padding-top: 2px;
+}
+
+.radiobutton StBin {
+    width: 16px;
+    height: 16px;
+    background-image: url("assets/radio-unchecked.svg");
+}
+
+.radiobutton:checked StBin {
+    background-image: url("assets/radio-checked.svg");
+}
+
+.check-box StLabel, .check-box-2 StLabel, .radiobutton StLabel {
+    font-weight: 500;
+    padding-left: 6px;
+}
+
+/* Desklets & Scrollbars */
+.desklet-with-borders {
+    border: 1px solid $border_light;
+    border-radius: 16px;
+    background-color: rgba(30, 30, 30, 0.65);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    padding: 16px;
+}
+
+StScrollView StScrollBar {
+    min-height: 10px;
+    min-width: 10px;
+}
+
+StScrollBar StBin#trough {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+StScrollBar StButton#vhandle,
+StScrollBar StButton#hhandle {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    transition-duration: 250ms;
+}
+
+StScrollBar StButton#vhandle:hover,
+StScrollBar StButton#hhandle:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}

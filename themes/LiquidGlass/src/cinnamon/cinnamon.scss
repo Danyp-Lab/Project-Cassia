@@ -1,0 +1,17 @@
+/*
+ * LiquidGlass Theme for Cinnamon
+ * A modern, high-performance glassmorphism theme for 2026 Linux Mint (Cinnamon 6.x+)
+ * Designed with beautiful, transparent overlays and smooth interactions.
+ * Fully standard: No system tweaks required.
+ */
+
+@import "colors";
+@import "mixins";
+
+@import "components/base";
+@import "components/panel";
+@import "components/menu";
+@import "components/dialogs";
+@import "components/workspaces";
+@import "components/applets";
+@import "components/switches_sliders";

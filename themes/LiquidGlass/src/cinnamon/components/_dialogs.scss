@@ -1,0 +1,84 @@
+/* ===================================================================
+ * 4. Dialogs, OSDs & Tooltips
+ * =================================================================== */
+.osd-window, .workspace-osd, .info-osd, .media-keys-osd, .resize-popup {
+    @include glass-osd;
+    padding: 18px;
+    text-align: center;
+}
+
+#Tooltip {
+    background-color: $bg_tooltip;
+    border: 1px solid $border_medium;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    padding: 8px 12px;
+    font-size: 9pt;
+}
+
+.notification {
+    background-color: $bg_dialog;
+    border: 1px solid $border_light;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    padding: 14px;
+    margin: 8px;
+}
+
+.dialog {
+    @include glass-dialog;
+    padding: 24px;
+}
+
+.dialog .dialog-button, .notification-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid $border_light;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: #ffffff;
+    transition-duration: 200ms;
+    font-weight: bold;
+}
+
+.dialog .dialog-button:hover, .notification-button:hover {
+    background-color: $hover_bg;
+    border: 1px solid $border_medium;
+}
+
+.dialog .dialog-button:active, .notification-button:active {
+    background-color: $active_bg;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Default and Destructive Action Buttons */
+.dialog .dialog-button:default {
+    background-color: $accent_blue;
+    border-color: $accent_blue_solid;
+}
+.dialog .dialog-button:hover:default {
+    background-color: $accent_blue_hover;
+}
+
+.dialog .dialog-button:destructive-action {
+    background-color: $accent_red;
+    border-color: $accent_red_solid;
+}
+.dialog .dialog-button:hover:destructive-action {
+    background-color: $accent_red_hover;
+}
+
+/* Run dialog specific input fields */
+.run-dialog-entry, .prompt-dialog-password-entry {
+    background-color: rgba(0, 0, 0, 0.25);
+    border: 1px solid $border_medium;
+    border-radius: 10px;
+    color: white;
+    padding: 8px 14px;
+    transition-duration: 200ms;
+}
+
+.run-dialog-entry:focus, .prompt-dialog-password-entry:focus {
+    border-color: $accent_blue_solid;
+    box-shadow: inset 0 0 0 1px rgba(0, 122, 255, 0.5), 0 0 8px rgba(0, 122, 255, 0.3);
+}
