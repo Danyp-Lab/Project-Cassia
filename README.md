@@ -1,6 +1,20 @@
-# Project Cassia 🍃
+<div align="center">
 
-![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
+# 🍃 Project Cassia
+### *Advanced UI Framework & Modern Applet Suite for the Cinnamon Desktop*
+
+[![Danyp-Lab](https://img.shields.io/badge/Danyp--Lab-Official_Project-00f2fe?style=for-the-badge&logo=github)](https://github.com/Danyp-Lab)
+[![Platform](https://img.shields.io/badge/Platform-Cinnamon%20Desktop-orange?style=for-the-badge&logo=linuxmint)](https://linuxmint.com)
+[![License](https://img.shields.io/badge/License-GPLv3-blue?style=for-the-badge)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active%20v1.0.0-success?style=for-the-badge)](#)
+
+<p align="center">
+  Engineered with high aesthetic standards and structural stability to provide memory-safe, crash-resistant desktop widgets for Linux Mint & Cinnamon.
+</p>
+
+</div>
+
+---(https://img.shields.io/badge/License-GPLv3-blue.svg)
 ![Platform](https://img.shields.io/badge/Platform-Cinnamon-orange.svg)
 ![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
 
